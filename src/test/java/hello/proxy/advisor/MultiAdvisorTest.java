@@ -37,6 +37,23 @@ public class MultiAdvisorTest {
         proxy2.find();
     }
 
+    @Test
+    @DisplayName("하나의 프록시, 여러 어드바이저")
+    void multiAdvisorTest2() {
+
+        DefaultPointcutAdvisor advisor1 = new DefaultPointcutAdvisor(Pointcut.TRUE, new Advice1());
+        DefaultPointcutAdvisor advisor2 = new DefaultPointcutAdvisor(Pointcut.TRUE, new Advice2());
+
+        //프록시1 생성
+        ServiceInterface target = new ServiceImpl();
+        ProxyFactory proxyFactory1 = new ProxyFactory(target);
+
+        proxyFactory1.addAdvisor(advisor2);
+        proxyFactory1.addAdvisor(advisor1);
+        ServiceInterface proxy = (ServiceInterface) proxyFactory1.getProxy();
+        proxy.save();
+    }
+
     static class Advice1 implements MethodInterceptor {
 
         @Override
